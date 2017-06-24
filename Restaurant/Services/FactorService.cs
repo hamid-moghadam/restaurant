@@ -29,6 +29,16 @@ namespace Services
             _factors.Remove(f);
         }
 
+        public Factor GetById(int id)
+        {
+            return _factors.FirstOrDefault(x => x.Id == id);
+        }
+
+        public List<FactorDetail> GetDetailsById(int id)
+        {
+            return _factors.Include(x=>x.FactorDetails).FirstOrDefault(x => x.Id == id).FactorDetails.ToList();
+        }
+
         public List<Factor> GetFactors()
         {
             return _factors.ToList();
@@ -37,7 +47,7 @@ namespace Services
         {
             //PersianCalendar p = new PersianCalendar();
             //p.GetDayOfMonth(d);
-            return _factors.Where(x=>x.Date.Equals(d)).ToList();
+            return _factors.Where(x=>  x.Date.Day == d.Day && x.Date.Year == d.Year && x.Date.Month == d.Month).ToList();
         }
     }
 }

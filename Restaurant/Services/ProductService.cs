@@ -26,6 +26,16 @@ namespace Services
             _products.Remove(p);
         }
 
+        public Product GetById(int id)
+        {
+            return _products.FirstOrDefault(x => x.Id == id);
+        }
+
+        public Product GetByName(string name)
+        {
+            return _products.FirstOrDefault(x => x.Name == name);
+        }
+
         public List<Product> GetProducts()
         {
             return _products.ToList();
@@ -34,6 +44,11 @@ namespace Services
         public List<Product> GetAvailableProducts()
         {
             return _products.Where(x => x.Available).ToList();
+        }
+
+        public List<string> GetUnAvailableProductNames()
+        {
+            return _products.Where(x => !x.Available).Select(x=>x.Name).ToList();
         }
 
         public List<string> GetAvailableProductNames()

@@ -29,15 +29,27 @@ namespace Restaurant
             factorsDetails = new List<FactorDetail>();
             _factorDetailService = new FactorDetailService(_uow);
             InitializeComponent();
-            InitializeDataGridView();            
+            InitializeOrderGridView();            
         }
 
-
-
-        private void InitializeDataGridView()
+        private void InitializeOrderGridView()
         {
-            var combo = dgvFactorDetails.Columns[0] as DataGridViewComboBoxColumn;
-            combo.DataSource = _productService.GetAvailableProductNames();
+            DataGridViewComboBoxColumn name = new DataGridViewComboBoxColumn
+            {
+                HeaderText = "نام محصول",
+                DataSource = _productService.GetAvailableProductNames()
+            };
+            DataGridViewTextBoxColumn count = new DataGridViewTextBoxColumn {HeaderText = "تعداد"};
+            DataGridViewTextBoxColumn desc = new DataGridViewTextBoxColumn {HeaderText = "توضیحات"};
+            DataGridViewTextBoxColumn mainPrice = new DataGridViewTextBoxColumn {HeaderText = "قیمت پایه"};
+            DataGridViewTextBoxColumn totalPrice = new DataGridViewTextBoxColumn {HeaderText = "مجموع قیمت",ReadOnly =  true};
+            dgvFactorDetails.Columns.Add(name);
+            dgvFactorDetails.Columns.Add(count);
+            dgvFactorDetails.Columns.Add(desc);
+            dgvFactorDetails.Columns.Add(mainPrice);
+            dgvFactorDetails.Columns.Add(totalPrice);
+
+
         }
 
         private int GetCountValue(int row)
@@ -78,7 +90,7 @@ namespace Restaurant
                 int count = GetCountValue(e.RowIndex<0?0:e.RowIndex);
                 string name = dgvFactorDetails[0, e.RowIndex].Value.ToString();
                 double price = _productService.GetPriceByName(name);
-                dgvFactorDetails[4, e.RowIndex].Value = price;
+                dgvFactorDetails[3, e.RowIndex].Value = price;
                 double total = price * count;
                 dgvFactorDetails[4, e.RowIndex].Value = total;
             }
@@ -101,10 +113,10 @@ namespace Restaurant
             Factor factor = new Factor()
             {
                 Date = DateTime.Now,
-                //FactorDetails = _factorDetailService.GetFactorDetails(),
                 TotalPrice = double.Parse(txtTotalPrice.Text),
                 TotalPriceWithTax = double.Parse(txtTotalPriceWithTax.Text)
             };            
+            _factorService.Add(factor);
             foreach (DataGridViewRow current in dgvFactorDetails.Rows)
             {
                 if (current.Cells[0].Value == null)
@@ -120,16 +132,8 @@ namespace Restaurant
                 factorsDetails.Add(f);
                 _factorDetailService.Add(f);
             }
-            factor.FactorDetails = factorsDetails;
-            _factorService.Add(factor);
             _uow.SaveChanges();
-
-
-
-
-
-            new Main().Show();
-            this.Close();
+            Service.ChangeForm(new Main(),this);
         }
 
         private void dgvFactorDetails_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)

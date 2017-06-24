@@ -12,7 +12,7 @@ namespace DAL.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Date_TwoDigitYearMax = c.Int(nullable: false),
+                        Date = c.DateTime(nullable: false),
                         TotalPrice = c.Double(nullable: false),
                         TotalPriceWithTax = c.Double(nullable: false),
                     })

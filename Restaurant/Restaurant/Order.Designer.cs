@@ -34,11 +34,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.dgvFactorDetails = new System.Windows.Forms.DataGridView();
-            this.productName = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.count = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.mainPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.totalPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFactorDetails)).BeginInit();
             this.SuspendLayout();
             // 
@@ -91,12 +86,6 @@
             // dgvFactorDetails
             // 
             this.dgvFactorDetails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvFactorDetails.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.productName,
-            this.count,
-            this.description,
-            this.mainPrice,
-            this.totalPrice});
             this.dgvFactorDetails.Location = new System.Drawing.Point(12, 12);
             this.dgvFactorDetails.Name = "dgvFactorDetails";
             this.dgvFactorDetails.Size = new System.Drawing.Size(669, 310);
@@ -105,32 +94,6 @@
             this.dgvFactorDetails.CurrentCellDirtyStateChanged += new System.EventHandler(this.dgvFactorDetails_CurrentCellDirtyStateChanged);
             this.dgvFactorDetails.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgvFactorDetails_RowsAdded);
             this.dgvFactorDetails.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dgvFactorDetails_UserDeletedRow);
-            // 
-            // productName
-            // 
-            this.productName.HeaderText = "نام محصول";
-            this.productName.Name = "productName";
-            // 
-            // count
-            // 
-            this.count.HeaderText = "تعداد";
-            this.count.Name = "count";
-            // 
-            // description
-            // 
-            this.description.HeaderText = "توضیحات";
-            this.description.Name = "description";
-            // 
-            // mainPrice
-            // 
-            this.mainPrice.HeaderText = "قیمت پایه";
-            this.mainPrice.Name = "mainPrice";
-            // 
-            // totalPrice
-            // 
-            this.totalPrice.HeaderText = "مجموع قیمت";
-            this.totalPrice.Name = "totalPrice";
-            this.totalPrice.ReadOnly = true;
             // 
             // Order
             // 
@@ -158,10 +121,5 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView dgvFactorDetails;
-        private System.Windows.Forms.DataGridViewComboBoxColumn productName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn count;
-        private System.Windows.Forms.DataGridViewTextBoxColumn description;
-        private System.Windows.Forms.DataGridViewTextBoxColumn mainPrice;
-        private System.Windows.Forms.DataGridViewTextBoxColumn totalPrice;
     }
 }

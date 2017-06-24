@@ -29,9 +29,10 @@ namespace DAL
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Factor>().HasOptional(x => x.FactorDetail)
-            //    .WithRequired(x=>x.Factor);
-            //modelBuilder.Entity<FactorDetail>().HasRequired(x => x.Factor);
+            modelBuilder.Entity<Factor>()
+            .Property(f => f.Date)
+            .HasColumnType("datetime2");
+
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             base.OnModelCreating(modelBuilder);
         }
