@@ -66,5 +66,10 @@ namespace Services
             return _products.First(x => x.Name == name).Id;
         }
 
+        public bool HasNameExists(string name)
+        {
+            return _products.FirstOrDefault(x => x.Name == name) != null;
+        }
+
     }
 }

@@ -29,6 +29,22 @@ namespace Services
             _factors.Remove(f);
         }
 
+        public void RemoveById(int id)
+        {
+            var f = _factors.FirstOrDefault(x => x.Id == id);
+            _factors.Remove(f);
+        }
+
+        public double GetTotalPrice()
+        {
+            return _factors.Select(x=>new { x.TotalPrice}).Sum(x => x.TotalPrice);
+        }
+
+        public double GetTotalPriceWithTax()
+        {
+            return _factors.Select(x => new { x.TotalPriceWithTax }).Sum(x => x.TotalPriceWithTax);
+        }
+
         public Factor GetById(int id)
         {
             return _factors.FirstOrDefault(x => x.Id == id);
@@ -41,7 +57,12 @@ namespace Services
 
         public List<Factor> GetFactors()
         {
-            return _factors.ToList();
+            return _factors.Include(x=>x.FactorDetails).ToList();
+        }
+
+        public List<Factor> FilterByDate(DateTime start, DateTime end)
+        {
+            return _factors.Where(x => x.Date.Day >= start.Day && x.Date.Year >= start.Year && start.Date.Month >= start.Month && x.Date.Day <= end.Day && x.Date.Year <= end.Year && start.Date.Month <= end.Month).ToList();
         }
         public List<Factor> GetFactorsByDate(DateTime d)
         {

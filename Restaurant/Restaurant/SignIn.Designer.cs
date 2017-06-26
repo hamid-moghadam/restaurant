@@ -88,8 +88,11 @@
             this.Controls.Add(this.lblResUser);
             this.Controls.Add(this.txtResPass);
             this.Controls.Add(this.txtResUser);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.MaximizeBox = false;
             this.Name = "SignIn";
-            this.Text = "SignIn";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "ورود";
             this.ResumeLayout(false);
             this.PerformLayout();
 

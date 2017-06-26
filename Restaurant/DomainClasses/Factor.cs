@@ -16,5 +16,13 @@ namespace DomainClasses
         public double TotalPriceWithTax { get; set; }
         public ICollection<FactorDetail> FactorDetails { get; set; }
 
+
+
+
+
+        public override string ToString()
+        {
+            return string.Format("{0}        {1}        {2}", Id, Date.ToShortDateString(), TotalPriceWithTax);
+        }
     }
 }

@@ -27,8 +27,16 @@ namespace Restaurant
             int tax = 0;
             int.TryParse(txtResTax.Text,out tax);
             DomainClasses.Restaurant r = new DomainClasses.Restaurant(name,owner,user,pass,tax);
-            string message = r.Save();
-            MessageBox.Show(message);
+            bool result = r.Save();
+            if (result)
+            {
+                MessageBox.Show("ثبت نام شما با موفقیت انجام شد");
+                Service.ChangeForm(new SignIn(), this);
+            }
+            else
+            {
+                MessageBox.Show("عملیات موفقیت آمیز نبود. مجددا اطلاعات را کامل کنید");
+            }
         }
 
         private void SignUp_InputLanguageChanged(object sender, InputLanguageChangedEventArgs e)

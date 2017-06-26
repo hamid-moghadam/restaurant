@@ -148,7 +148,9 @@
             this.Controls.Add(this.txtResUser);
             this.Controls.Add(this.txtResOwner);
             this.Controls.Add(this.txtResName);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "SignUp";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ثبت نام";
             this.InputLanguageChanged += new System.Windows.Forms.InputLanguageChangedEventHandler(this.SignUp_InputLanguageChanged);
             this.ResumeLayout(false);

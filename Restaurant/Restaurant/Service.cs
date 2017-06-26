@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -38,7 +41,25 @@ namespace Restaurant
             dgv.AutoSizeColumnsMode =
                 DataGridViewAutoSizeColumnsMode.AllCells;
         }
-        
+
+        public static string ToPersionDate(DateTime d)
+        {
+            PersianCalendar pc = new PersianCalendar();
+            return $"{pc.GetYear(d)}/{pc.GetMonth(d)}/{pc.GetDayOfMonth(d)}";
+        }
+
+        public static DomainClasses.Restaurant GetCurrentRestaurant()
+        {
+            string path = Directory.GetCurrentDirectory() + "\\info.txt";
+            string[] info = File.ReadAllLines(path);
+            DomainClasses.Restaurant r;
+            using (FileStream stream = File.OpenRead(path))
+            {
+                var formatter = new BinaryFormatter();
+                r = (DomainClasses.Restaurant)formatter.Deserialize(stream);
+            }
+            return r;
+        }
 
 
     }

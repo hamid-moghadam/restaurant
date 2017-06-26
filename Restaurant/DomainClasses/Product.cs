@@ -19,5 +19,6 @@ namespace DomainClasses
         public bool Available { get; set; }
         public ProductType Type { get; set; }
         public virtual ICollection<FactorDetail> FactorDetails { get; set; }
+
     }
 }

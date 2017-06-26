@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DAL;
 using DomainClasses;
+using Restaurant.GridView;
 using Services;
 
 namespace Restaurant
@@ -19,39 +20,25 @@ namespace Restaurant
         private readonly ProductService _productService;
         private readonly FactorService _factorService;
         private readonly FactorDetailService _factorDetailService;
-        private readonly DomainClasses.Restaurant _restaurant = DomainClasses.Restaurant.GetCurrent();
-        private List<FactorDetail> factorsDetails;
+        private readonly FactorDetailsGridView _orderGrid;
+
+
+
         public Order()
         {
+            InitializeComponent();
             _uow = new Context();
             _productService = new ProductService(_uow);
             _factorService = new FactorService(_uow);
-            factorsDetails = new List<FactorDetail>();
             _factorDetailService = new FactorDetailService(_uow);
-            InitializeComponent();
-            InitializeOrderGridView();            
-        }
-
-        private void InitializeOrderGridView()
-        {
-            DataGridViewComboBoxColumn name = new DataGridViewComboBoxColumn
-            {
-                HeaderText = "نام محصول",
-                DataSource = _productService.GetAvailableProductNames()
-            };
-            DataGridViewTextBoxColumn count = new DataGridViewTextBoxColumn {HeaderText = "تعداد"};
-            DataGridViewTextBoxColumn desc = new DataGridViewTextBoxColumn {HeaderText = "توضیحات"};
-            DataGridViewTextBoxColumn mainPrice = new DataGridViewTextBoxColumn {HeaderText = "قیمت پایه"};
-            DataGridViewTextBoxColumn totalPrice = new DataGridViewTextBoxColumn {HeaderText = "مجموع قیمت",ReadOnly =  true};
-            dgvFactorDetails.Columns.Add(name);
-            dgvFactorDetails.Columns.Add(count);
-            dgvFactorDetails.Columns.Add(desc);
-            dgvFactorDetails.Columns.Add(mainPrice);
-            dgvFactorDetails.Columns.Add(totalPrice);
-
+            _orderGrid = new FactorDetailsGridView(dgvFactorDetails);
 
         }
-
+        /// <summary>
+        /// بررسی صحیح بودن فیلد تعداد و بازگرداندن آن
+        /// </summary>
+        /// <param name="row"></param>
+        /// <returns></returns>
         private int GetCountValue(int row)
         {
             int count = 1;
@@ -62,7 +49,9 @@ namespace Restaurant
             MessageBox.Show("تعداد وارد شده صحیح نمی باشد. دوباره سعی کنید");
             return 1;
         }
-
+        /// <summary>
+        /// نشان دادن مجموع کل قیمت به همراه مالیات
+        /// </summary>
         private void UpdateTotalPrice()
         {
             double total = 0;
@@ -71,10 +60,11 @@ namespace Restaurant
                 object obj = dgvFactorDetails.Rows[i].Cells[4].Value ?? 0;
                 total += double.Parse(obj.ToString());
             }
-            txtTotalPrice.Text = total.ToString();
-            int tax = _restaurant.Tax;
-            txtTotalPriceWithTax.Text = (total + total * tax / 100).ToString();
+            txtTotalPrice.Text = $"{total:c0}";
+            int tax = Service.GetCurrentRestaurant().Tax;
+            txtTotalPriceWithTax.Text = $"{(total + total * tax / 100):c0}";
         }
+        //تغییر قیمت کل با حذف هر سفارش توسط کاربر
         private void dgvFactorDetails_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
         {
             UpdateTotalPrice();
@@ -82,39 +72,56 @@ namespace Restaurant
 
         private void dgvFactorDetails_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            //نمیدونم چرا همون دفعه اول با اضافه کردن هر ستون یکبار اجرا می شود
+            //مشکل: دفعه اول با اضافه کردن هر ستون یکبار اجرا می شود
             if (e.RowIndex == -1)
                 return;
+            //تغییر تعداد
             if (e.ColumnIndex == 1)
             {
-                int count = GetCountValue(e.RowIndex<0?0:e.RowIndex);
-                string name = dgvFactorDetails[0, e.RowIndex].Value.ToString();
-                double price = _productService.GetPriceByName(name);
-                dgvFactorDetails[3, e.RowIndex].Value = price;
-                double total = price * count;
-                dgvFactorDetails[4, e.RowIndex].Value = total;
+                UpdateProductPrice(e.RowIndex);
+                UpdateTotalPrice();
+
             }
+            //تغییر قیمت کل فاکتور ها
             else if (e.ColumnIndex == 4 )
                 UpdateTotalPrice();
+            //تغییر نام محصول
             else if (e.ColumnIndex == 0)
             {
                 dgvFactorDetails[1, e.RowIndex].Value = 1;
+                UpdateProductPrice(e.RowIndex);
+                UpdateTotalPrice();
             }
         }
+        //تغییر مجموع قیمت در صورت تغییر تعداد
+        private void UpdateProductPrice(int rowIndex)
+        {
+            int count = GetCountValue(rowIndex < 0 ? 0 : rowIndex);
+            string name = dgvFactorDetails[0, rowIndex].Value.ToString();
+            double price = _productService.GetPriceByName(name);
+            dgvFactorDetails[3, rowIndex].Value = price;
+            double total = price * count;
+            dgvFactorDetails[4, rowIndex].Value = total;
+        }
+
         //برای بررسی رویداد های کمبو باکس ، نیاز به این کد داریم. انها پیش فرض اجرا نمی شوند
         private void dgvFactorDetails_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
-            
             dgvFactorDetails.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
-
+        //ثبت تمامی سفارشات
         private void submit_Click(object sender, EventArgs e)
         {
+            if (dgvFactorDetails.Rows.Count == 0)
+            {
+                Service.ChangeForm(new Main(), this);
+                return;
+            }
             Factor factor = new Factor()
             {
                 Date = DateTime.Now,
-                TotalPrice = double.Parse(txtTotalPrice.Text),
-                TotalPriceWithTax = double.Parse(txtTotalPriceWithTax.Text)
+                TotalPrice = double.Parse(txtTotalPrice.Text.Replace(".","").Replace("$","")),
+                TotalPriceWithTax = double.Parse(txtTotalPriceWithTax.Text.Replace(".", "").Replace("$", ""))
             };            
             _factorService.Add(factor);
             foreach (DataGridViewRow current in dgvFactorDetails.Rows)
@@ -129,16 +136,15 @@ namespace Restaurant
                     Factor = factor,
                     TotalPrice = double.Parse(current.Cells[4].Value.ToString())
                 };
-                factorsDetails.Add(f);
                 _factorDetailService.Add(f);
             }
             _uow.SaveChanges();
             Service.ChangeForm(new Main(),this);
         }
 
-        private void dgvFactorDetails_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        private void retrunHome_Click(object sender, EventArgs e)
         {
-           
+            Service.ChangeForm(new Main(), this);
         }
     }
 }

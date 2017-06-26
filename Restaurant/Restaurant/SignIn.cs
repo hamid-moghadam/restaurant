@@ -24,8 +24,14 @@ namespace Restaurant
             
             string user = txtResUser.Text;
             string pass = txtResPass.Text;
-            DomainClasses.Restaurant current = DomainClasses.Restaurant.GetCurrent();
-            MessageBox.Show(current.CanLogin(user, pass) ? "خوش آمدی" : "یوزرنیم یا پسور اشتباه است");
+            DomainClasses.Restaurant current = Service.GetCurrentRestaurant();
+            bool login = current.CanLogin(user, pass);
+            if (login)
+            {
+                Service.ChangeForm(new Main(),this);
+            }
+            else
+                MessageBox.Show("یوزرنیم یا پسور اشتباه است");
         }
     }
 }

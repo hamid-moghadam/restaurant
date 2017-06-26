@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,7 +17,12 @@ namespace Restaurant
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Main());
+            Form first = null;
+            if (File.Exists(Directory.GetCurrentDirectory() + "\\info.txt"))
+                first = new SignIn();
+            else
+                first = new SignUp();
+            Application.Run(first);
         }
     }
 }

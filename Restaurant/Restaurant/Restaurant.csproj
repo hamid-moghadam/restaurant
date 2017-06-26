@@ -55,6 +55,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factors.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Factors.Designer.cs">
+      <DependentUpon>Factors.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GridView\AvailableProductGridView.cs" />
+    <Compile Include="GridView\CustomGridView.cs" />
+    <Compile Include="GridView\DailyFactorGridView.cs" />
+    <Compile Include="GridView\ShowFactorDetailsGridView.cs" />
+    <Compile Include="GridView\FactorGridView.cs" />
+    <Compile Include="GridView\ICustomColumn.cs" />
+    <Compile Include="GridView\FactorDetailsGridView.cs" />
+    <Compile Include="GridView\ProductGridView.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -66,6 +80,12 @@
     </Compile>
     <Compile Include="Order.Designer.cs">
       <DependentUpon>Order.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Products.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Products.Designer.cs">
+      <DependentUpon>Products.cs</DependentUpon>
     </Compile>
     <Compile Include="Service.cs" />
     <Compile Include="SignIn.cs">
@@ -82,11 +102,17 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Factors.resx">
+      <DependentUpon>Factors.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Order.resx">
       <DependentUpon>Order.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Products.resx">
+      <DependentUpon>Products.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -125,6 +151,10 @@
     <ProjectReference Include="..\DomainClasses\DomainClasses.csproj">
       <Project>{a19079e6-a707-4aff-ab62-c7a8515dc68b}</Project>
       <Name>DomainClasses</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Extensions\Extensions.csproj">
+      <Project>{4315828f-cc81-4e33-b611-63991937e138}</Project>
+      <Name>Extensions</Name>
     </ProjectReference>
     <ProjectReference Include="..\Services\Services.csproj">
       <Project>{86fab6ee-f918-4f6a-abf2-0aacd5b02257}</Project>

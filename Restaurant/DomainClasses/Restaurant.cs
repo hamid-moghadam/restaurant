@@ -35,48 +35,23 @@ namespace DomainClasses
             return string.Format($"{Name}\r\n{Owner}\r\n{Username}\r\n{pass}\r\n{Tax}");
         }
 
-        public string Save()
+        public bool Save()
         {
+            string path = Directory.GetCurrentDirectory() + "\\info.txt";
             if (Name == "" || Owner == "" || Username == "" || Password == "" || Tax < 0)
-                return "عملیات موفقیت آمیز نبود. مجدد با اطلاعات کامل سعی کنید";
+                return false;
             this.Password = this.Password.CustomHash();
-            using (FileStream stream = File.Create(Path()))
+            using (FileStream stream = File.Create(path))
             {
                 var formatter = new BinaryFormatter();
                 formatter.Serialize(stream, this);
             }
-            //using (StreamWriter writer = new StreamWriter(fileName))
-            //{
-            //    writer.WriteLineAsync(ToString());
-            //}
-            return "عملیات موفقیت آمیز بود";
-        }
-
-        public static Restaurant GetCurrent()
-        {
-            string[] info = File.ReadAllLines(Directory.GetCurrentDirectory() + "\\info.txt");
-            Restaurant r;
-            using (FileStream stream = File.OpenRead(Path()))
-            {
-                var formatter = new BinaryFormatter();
-                 r = (Restaurant)formatter.Deserialize(stream);
-            }
-            //Stream s = new StreamReader(Directory.GetCurrentDirectory() + "\\info.txt").BaseStream;
-            //IFormatter deserilize = new BinaryFormatter();
-            //deserilize.Deserialize(s);
-            //s.
-            //return  new Restaurant(info[0],info[1],info[2],info[3],int.Parse(info[4]));
-            return r;
+            return true;;
         }
 
         public bool CanLogin(string user, string pass)
         {
             return user == this.Username && pass.CustomHash() == this.Password;
-        }
-
-        private static string Path()
-        {
-            return Directory.GetCurrentDirectory() + "\\info.txt";
         }
     }
 }
